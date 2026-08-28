@@ -5,7 +5,10 @@ import ProjectCard from './components/ProjectCard'
 import ProjectDetail from './components/ProjectDetail'
 import ConfirmModal from './components/ConfirmModal'
 import SuccessModal from './components/SuccessModal'
+import Login from './components/Login'
 import { getProjects, submitVote } from './lib/supabase'
+
+const AUTH_KEY = 'ucsm_unlimited_auth'
 
 const categories = [
   { id: 'computer_science', label: 'Computer Science' },
@@ -36,6 +39,7 @@ const s = {
 }
 
 export default function App() {
+  const [authed, setAuthed] = useState(() => localStorage.getItem(AUTH_KEY) === '1')
   const [activeCategory, setActiveCategory] = useState('computer_science')
   const [projects, setProjects] = useState([])
   const [loading, setLoading] = useState(true)
@@ -85,6 +89,10 @@ export default function App() {
       setError('Failed to submit vote.')
       setConfirmProject(null)
     }
+  }
+
+  if (!authed) {
+    return <Login onLogin={() => { localStorage.setItem(AUTH_KEY, '1'); setAuthed(true) }} />
   }
 
   return (
