@@ -17,9 +17,10 @@ export async function getProjects(category) {
 }
 
 export async function submitVote(projectId, category) {
+  const fingerprint = `guest_${Date.now()}_${Math.random().toString(36).slice(2, 10)}`
   const { data, error } = await supabase
     .from('votes')
-    .insert({ project_id: projectId, category, fingerprint: null })
+    .insert({ project_id: projectId, category, fingerprint })
     .select()
 
   if (error) throw error
